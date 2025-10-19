@@ -1,0 +1,12 @@
+# Documentation Directory
+
+This directory contains project documentation.
+
+Examples:
+- `api/` - API documentation
+- `architecture/` - System architecture docs
+- `deployment/` - Deployment guides
+- `development/` - Development setup and guidelines
+- `user/` - User guides and tutorials
+
+Keep documentation up to date and easily accessible.

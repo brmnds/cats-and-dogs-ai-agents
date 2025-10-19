@@ -1,0 +1,21 @@
+# Specs Directory
+
+This directory contains feature specifications created using Kiro's spec workflow.
+
+Each feature spec includes:
+- `requirements.md` - Feature requirements and user stories
+- `design.md` - Technical design and architecture
+- `tasks.md` - Implementation task list
+
+Example structure:
+```
+user-authentication/
+├── requirements.md
+├── design.md
+└── tasks.md
+
+dashboard-analytics/
+├── requirements.md
+├── design.md
+└── tasks.md
+```

@@ -1,0 +1,12 @@
+# Packages Directory
+
+This directory contains shared packages and libraries used across apps and services.
+
+Examples:
+- `ui/` - Shared UI components
+- `utils/` - Utility functions
+- `types/` - Shared TypeScript types
+- `config/` - Shared configuration
+- `database/` - Database schema and migrations
+
+Each package should be reusable and have its own package.json.

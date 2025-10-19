@@ -1,0 +1,12 @@
+# Infrastructure Directory
+
+This directory contains infrastructure as code and deployment configurations.
+
+Examples:
+- `terraform/` - Terraform configurations
+- `docker/` - Docker configurations
+- `k8s/` - Kubernetes manifests
+- `scripts/` - Deployment scripts
+- `environments/` - Environment-specific configurations
+
+Keep infrastructure code version controlled and documented.

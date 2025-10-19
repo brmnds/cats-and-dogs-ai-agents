@@ -1,0 +1,10 @@
+# Apps Directory
+
+This directory contains the main applications in the monorepo.
+
+Examples:
+- `web/` - Main web application (Next.js)
+- `admin/` - Admin dashboard
+- `mobile/` - React Native app (if needed)
+
+Each app should be self-contained with its own package.json and dependencies.

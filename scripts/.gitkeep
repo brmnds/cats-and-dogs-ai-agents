@@ -1,0 +1,12 @@
+# Scripts Directory
+
+This directory contains utility scripts for development and operations.
+
+Examples:
+- `setup.sh` - Project setup script
+- `build.sh` - Build scripts
+- `deploy.sh` - Deployment scripts
+- `db-migrate.sh` - Database migration scripts
+- `test.sh` - Testing scripts
+
+Make scripts executable and document their usage.

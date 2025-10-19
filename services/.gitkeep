@@ -1,0 +1,11 @@
+# Services Directory
+
+This directory contains backend services and APIs.
+
+Examples:
+- `api/` - Main API service
+- `auth/` - Authentication service
+- `notifications/` - Notification service
+- `workers/` - Background job workers
+
+Each service should be independently deployable with its own package.json.
