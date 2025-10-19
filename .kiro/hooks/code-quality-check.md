@@ -1,40 +1,49 @@
 # Code Quality Check Hook
 
-*Lightweight pre-commit validation for maintaining code quality*
+_Lightweight pre-commit validation for maintaining code quality_
 
 ## Purpose
+
 This hook provides minimal quality gates to catch common issues before code is committed, ensuring consistent code quality across the project.
 
 ## Validation Steps
 
 ### 1. TypeScript Type Checking
+
 ```bash
 tsc --noEmit
 ```
+
 - Validates TypeScript types across the entire project
 - Catches type errors before they reach production
 - Ensures type safety is maintained
 
 ### 2. ESLint Code Linting
+
 ```bash
 eslint . --ext .ts,.tsx,.js,.jsx
 ```
+
 - Enforces code style and best practices
 - Catches potential bugs and code smells
 - Maintains consistent coding patterns
 
 ### 3. Prettier Code Formatting
+
 ```bash
 prettier --check .
 ```
+
 - Ensures consistent code formatting
 - Maintains readable and professional code style
 - Reduces formatting-related code review discussions
 
 ### 4. Build Verification
+
 ```bash
 npm run build
 ```
+
 - Verifies that the project builds successfully
 - Catches build-time errors early
 - Ensures deployability of the code
@@ -42,6 +51,7 @@ npm run build
 ## Implementation Options
 
 ### Option 1: Pre-commit Hook (Recommended)
+
 Install and configure using husky and lint-staged:
 
 ```bash
@@ -49,13 +59,11 @@ npm install --save-dev husky lint-staged
 ```
 
 Add to package.json:
+
 ```json
 {
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ]
+    "*.{ts,tsx,js,jsx}": ["eslint --fix", "prettier --write"]
   },
   "scripts": {
     "prepare": "husky install"
@@ -64,7 +72,9 @@ Add to package.json:
 ```
 
 ### Option 2: GitHub Action
+
 Create `.github/workflows/code-quality.yml`:
+
 ```yaml
 name: Code Quality Check
 on: [push, pull_request]
@@ -84,7 +94,9 @@ jobs:
 ```
 
 ### Option 3: Manual Script
+
 Add to package.json scripts:
+
 ```json
 {
   "scripts": {
@@ -96,22 +108,24 @@ Add to package.json scripts:
 ## Configuration Files
 
 ### ESLint Configuration (.eslintrc.js)
+
 ```javascript
 module.exports = {
   extends: [
     'eslint:recommended',
     '@typescript-eslint/recommended',
-    'next/core-web-vitals'
+    'next/core-web-vitals',
   ],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
   rules: {
     // Add project-specific rules here
-  }
+  },
 };
 ```
 
 ### Prettier Configuration (.prettierrc)
+
 ```json
 {
   "semi": true,
@@ -123,6 +137,7 @@ module.exports = {
 ```
 
 ### TypeScript Configuration (tsconfig.json)
+
 ```json
 {
   "compilerOptions": {
@@ -152,6 +167,7 @@ module.exports = {
 As the project matures, consider adding:
 
 ### Additional Checks
+
 - **Unit Test Execution**: Run tests before commit
 - **Security Scanning**: Check for known vulnerabilities
 - **Bundle Size Analysis**: Monitor bundle size changes
@@ -159,12 +175,14 @@ As the project matures, consider adding:
 - **Dependency Audits**: Check for outdated or vulnerable dependencies
 
 ### Advanced Linting
+
 - **Import Sorting**: Consistent import organization
 - **Unused Code Detection**: Find and remove dead code
 - **Complexity Analysis**: Monitor code complexity metrics
 - **Documentation Linting**: Ensure proper JSDoc comments
 
 ### Integration Tests
+
 - **API Endpoint Testing**: Validate API contracts
 - **Database Migration Testing**: Ensure migrations work correctly
 - **End-to-End Testing**: Critical user journey validation
@@ -172,12 +190,14 @@ As the project matures, consider adding:
 ## Troubleshooting
 
 ### Common Issues
+
 - **Slow Hook Execution**: Consider running checks only on staged files
 - **False Positives**: Adjust ESLint rules for project needs
 - **Build Failures**: Ensure all dependencies are properly installed
 - **Type Errors**: Keep TypeScript configuration up to date
 
 ### Performance Optimization
+
 - Use `lint-staged` to run checks only on changed files
 - Cache TypeScript compilation results
 - Run checks in parallel when possible
@@ -185,4 +205,4 @@ As the project matures, consider adding:
 
 ---
 
-*Note: Start with the basic validation steps and expand based on project needs and team preferences. The goal is to catch issues early without slowing down development velocity.*
+_Note: Start with the basic validation steps and expand based on project needs and team preferences. The goal is to catch issues early without slowing down development velocity._

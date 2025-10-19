@@ -51,6 +51,7 @@ npm run quality-check # Run all quality checks
 ### Code Quality
 
 This project uses automated code quality checks:
+
 - Pre-commit hooks with Husky and lint-staged
 - TypeScript strict mode for type safety
 - ESLint for code linting
@@ -63,6 +64,7 @@ For detailed technical documentation, architecture overview, and development gui
 ## Kiro Framework
 
 This project uses the Kiro development framework with:
+
 - **Steering documents** in `.kiro/steering/` for development guidelines
 - **Spec workflow** in `.kiro/specs/` for feature development
 - **Agent hooks** in `.kiro/hooks/` for automated workflows

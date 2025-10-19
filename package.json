@@ -3,7 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "description": "Modern web application built with Kiro framework",
-  "keywords": ["nextjs", "typescript", "monorepo", "kiro"],
+  "keywords": [
+    "nextjs",
+    "typescript",
+    "monorepo",
+    "kiro"
+  ],
   "author": "",
   "license": "MIT",
   "workspaces": [
@@ -21,9 +26,11 @@
     "type-check": "turbo run type-check",
     "test": "turbo run test",
     "clean": "turbo run clean",
-    "quality-check": "npm run type-check && npm run lint && npm run format:check && npm run build"
+    "quality-check": "npm run type-check && npm run lint && npm run format:check && npm run build",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "@eslint/js": "^9.38.0",
     "@typescript-eslint/eslint-plugin": "^8.15.0",
     "@typescript-eslint/parser": "^8.15.0",
     "eslint": "^9.16.0",
