@@ -12,35 +12,43 @@ _Draft framework - to be defined based on project requirements_
 
 ### Frontend Framework
 
-- **Next.js**: v15.5.6 (Latest stable)
-- **React**: Latest compatible with Next.js
-- **CSS**: Tailwind CSS or CSS Modules (to be decided)
+- **Next.js**: v15.5.6 (Latest stable) ✅ **SELECTED**
+- **React**: Latest compatible with Next.js ✅ **SELECTED**
+- **CSS**: Tailwind CSS ✅ **SELECTED**
 
 ### Backend & API
 
-- **API Framework**: Next.js API Routes or Express.js (to be decided)
-- **Database**: PostgreSQL, MySQL, or SQLite (to be decided based on requirements)
-- **ORM/Query Builder**: Prisma, Drizzle, or TypeORM (to be decided)
+- **API Framework**: Next.js API Routes ✅ **SELECTED**
+- **Database**: Amazon Aurora PostgreSQL ✅ **SELECTED**
+- **ORM/Query Builder**: Native AWS SDK with PostgreSQL client ✅ **SELECTED**
+
+### AI & Machine Learning
+
+- **Image Generation**: Amazon Nova Canvas on Bedrock ✅ **SELECTED**
+- **AI Agent Framework**: Strands Agents Framework ✅ **SELECTED**
+- **AI Agent Runtime**: Amazon Bedrock AgentCore Runtime ✅ **SELECTED**
+- **Foundation Models**: Amazon Bedrock models ✅ **SELECTED**
 
 ### Development Tools
 
-- **Package Manager**: npm workspaces or pnpm (to be decided)
-- **Monorepo Tool**: Turborepo
-- **Linting**: ESLint with TypeScript support
-- **Formatting**: Prettier
-- **Testing**: Vitest or Jest (to be decided)
+- **Package Manager**: npm ✅ **SELECTED**
+- **Linting**: ESLint with TypeScript support ✅ **SELECTED**
+- **Formatting**: Prettier ✅ **SELECTED**
+- **Testing**: Vitest (with optional unit tests) ✅ **SELECTED**
 
 ### Infrastructure & Deployment
 
-- **Cloud Provider**: AWS, Vercel, or Railway (to be decided)
-- **Database Hosting**: Managed service or self-hosted (to be decided)
-- **File Storage**: Local or cloud storage (to be decided based on needs)
+- **Cloud Provider**: AWS ✅ **SELECTED**
+- **Hosting Platform**: AWS Amplify ✅ **SELECTED**
+- **Database Hosting**: Amazon Aurora PostgreSQL ✅ **SELECTED**
+- **Image Storage**: Base64 in-memory (no persistent storage) ✅ **SELECTED**
 
 ### Authentication & Security
 
-- **Authentication**: NextAuth.js, Clerk, or custom (to be decided)
-- **Environment Management**: dotenv with validation
-- **Security**: Helmet.js, CORS configuration
+- **Authentication**: None (no login required) ✅ **SELECTED**
+- **Environment Management**: dotenv with validation ✅ **SELECTED**
+- **Security**: AWS IAM roles, CORS configuration ✅ **SELECTED**
+- **AWS Services**: Bedrock, Aurora, Amplify integration ✅ **SELECTED**
 
 ### Monitoring & Analytics
 
@@ -65,17 +73,42 @@ _Draft framework - to be defined based on project requirements_
 4. **Scale**: Is it appropriate for our user base and growth expectations?
 5. **Team**: Does it match the team's expertise and preferences?
 
-## To Be Defined
+## Pet Image AI Application Stack
 
-The following technology choices need to be made based on specific project requirements:
+All technology decisions have been finalized for the Pet Image AI application:
 
-- **Database choice** (PostgreSQL vs MySQL vs SQLite)
-- **CSS framework** (Tailwind vs CSS Modules vs Styled Components)
-- **Authentication provider** (NextAuth.js vs Clerk vs custom)
-- **Deployment platform** (Vercel vs AWS vs Railway)
-- **Testing framework** (Vitest vs Jest)
-- **Package manager** (npm vs pnpm)
+### Core Architecture
+
+- **Frontend**: Next.js 15.5.6 + React + TypeScript + Tailwind CSS
+- **Backend**: Next.js API Routes with AWS SDK integration
+- **Database**: Amazon Aurora PostgreSQL for classification data storage
+- **Hosting**: AWS Amplify with native AWS service integration
+- **AI Services**: Amazon Bedrock (Nova Canvas + AgentCore Runtime)
+
+### Key Features
+
+- **No Authentication**: Simple, accessible interface without login requirements
+- **AI Image Generation**: Amazon Nova Canvas for cat/dog image generation
+- **AI Classification**: Strands Agents Framework on Bedrock AgentCore
+- **Data Persistence**: User names and classification results stored in Aurora
+- **Error Handling**: Graceful degradation with user-friendly error messages
+
+### Environment Variables Required
+
+```bash
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=your_access_key (local dev only)
+AWS_SECRET_ACCESS_KEY=your_secret_key (local dev only)
+BEDROCK_AGENT_ID=your_agent_id
+BEDROCK_AGENT_ALIAS_ID=your_alias_id
+NOVA_CANVAS_MODEL_ID=amazon.nova-canvas-v1:0
+DATABASE_HOST=your-aurora-cluster.cluster-xyz.us-east-1.rds.amazonaws.com
+DATABASE_PORT=5432
+DATABASE_NAME=pet_image_ai
+DATABASE_USERNAME=your_db_user
+DATABASE_PASSWORD=your_db_password
+```
 
 ---
 
-_Note: This document will be updated as technology decisions are made based on specific project requirements and team preferences._
+_Note: This stack is specifically configured for the Pet Image AI application requirements._

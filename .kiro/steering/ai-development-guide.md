@@ -1,58 +1,102 @@
 # AI Development Guide
 
-_Draft framework - expand these principles as AI features are developed_
+_Amazon Bedrock & Strands Agents Framework - Pet Image AI Application_
 
 ## Core Principles
 
-### Model Selection
+### Model Selection for Pet Image AI
 
-Choose appropriate models based on task complexity and cost considerations:
+**Selected AWS Bedrock Services:**
 
-**Task Complexity Matching:**
+- **Image Generation**: Amazon Nova Canvas (amazon.nova-canvas-v1:0)
+  - Optimized for high-quality image generation
+  - Cost-effective for on-demand image creation
+  - Supports cat and dog image generation with text prompts
+- **Image Classification**: Strands Agents Framework on Bedrock AgentCore Runtime
+  - Enterprise-grade agent deployment and scaling
+  - Structured response format with confidence scores
+  - Built-in error handling and retry mechanisms
 
-- Simple text processing: Use efficient, cost-effective models
-- Complex reasoning: Use more capable models when justified
-- Real-time responses: Prioritize speed over maximum capability
-- Batch processing: Optimize for throughput and cost
+**Cost Considerations:**
 
-**Cost Awareness:**
+- Nova Canvas: Pay-per-image generation (suitable for demo/testing)
+- Bedrock Agent: Pay-per-invocation with built-in optimization
+- Monitor usage through AWS CloudWatch
+- No caching needed for demo application (each generation is unique)
 
-- Monitor token usage across all AI interactions
-- Implement usage limits and alerts
-- Choose models that balance capability with cost
-- Cache responses when appropriate to reduce API calls
+### Prompt Engineering for Pet Image AI
 
-### Prompt Engineering
+**Nova Canvas Image Generation Prompts:**
 
-**Clear, Structured Prompts:**
+```typescript
+// Template for cat images
+const catPrompt =
+  'A realistic, high-quality photograph of a cute domestic cat. The cat should be clearly visible, well-lit, and the main subject of the image. Professional photography style.';
 
-- Use consistent prompt templates
-- Include clear instructions and context
-- Provide examples for complex tasks
-- Structure prompts with clear sections (context, task, format)
+// Template for dog images
+const dogPrompt =
+  'A realistic, high-quality photograph of a cute domestic dog. The dog should be clearly visible, well-lit, and the main subject of the image. Professional photography style.';
+```
+
+**Strands Agent Classification Instructions:**
+
+```typescript
+// Agent system prompt for classification
+const classificationPrompt = `
+You are an expert pet classifier. Analyze the provided image and determine if it contains a cat or a dog.
+
+Response format:
+{
+  "classification": "cat" | "dog",
+  "confidence": 0.0-1.0,
+  "reasoning": "Brief explanation of key features that led to this classification"
+}
+
+Focus on key distinguishing features like facial structure, ears, body shape, and posture.
+`;
+```
 
 **Best Practices:**
 
-- Be specific about desired output format
-- Include relevant context without overwhelming the model
-- Use system messages for consistent behavior
-- Test prompts with edge cases and unexpected inputs
+- Keep prompts simple and focused on the specific task
+- Use consistent terminology across all AI interactions
+- Test with edge cases (unclear images, multiple animals, etc.)
+- Validate response format before processing
 
-### Error Handling & Reliability
+### Error Handling & Reliability for Pet Image AI
 
-**Graceful Fallbacks:**
+**AWS Bedrock Error Handling:**
 
-- Always implement fallback behavior for AI failures
-- Provide meaningful error messages to users
-- Log AI errors for debugging and improvement
-- Never let AI failures break core application functionality
+```typescript
+// Error categories for Pet Image AI
+enum AIErrorType {
+  NOVA_CANVAS_FAILED = 'NOVA_CANVAS_FAILED',
+  CLASSIFICATION_FAILED = 'CLASSIFICATION_FAILED',
+  AWS_CREDENTIALS_INVALID = 'AWS_CREDENTIALS_INVALID',
+  SERVICE_UNAVAILABLE = 'SERVICE_UNAVAILABLE',
+  TIMEOUT = 'TIMEOUT',
+}
 
-**Retry Logic:**
+// User-friendly error messages
+const errorMessages = {
+  [AIErrorType.NOVA_CANVAS_FAILED]:
+    'Unable to generate image. Please try again.',
+  [AIErrorType.CLASSIFICATION_FAILED]:
+    'Unable to classify image. Please check your connection.',
+  [AIErrorType.AWS_CREDENTIALS_INVALID]:
+    'Service configuration error. Please contact support.',
+  [AIErrorType.SERVICE_UNAVAILABLE]:
+    'AI services are temporarily unavailable. Please try again later.',
+  [AIErrorType.TIMEOUT]: 'Request timed out. Please try again.',
+};
+```
 
-- Implement exponential backoff for transient failures
-- Set reasonable timeout limits
-- Handle rate limiting gracefully
-- Distinguish between retryable and permanent errors
+**Retry Strategy:**
+
+- Nova Canvas: 3 retries with exponential backoff (2s, 4s, 8s)
+- Bedrock Agent: 2 retries with 3s, 6s delays
+- Timeout limits: 30s for image generation, 15s for classification
+- No retries for invalid credentials or malformed requests
 
 ### Context Management
 
@@ -102,30 +146,70 @@ Choose appropriate models based on task complexity and cost considerations:
 - Monitor API usage and costs
 - Optimize batch processing when applicable
 
-## Development Workflow
+## Pet Image AI Development Workflow
 
-### AI Feature Development
+### Strands Agents Framework Development
 
-1. Define clear success criteria for AI functionality
-2. Start with simple prompts and iterate
-3. Test with diverse inputs and edge cases
-4. Implement proper error handling and fallbacks
-5. Monitor performance and user satisfaction
+1. **Agent Creation**: Implement classification agent using Strands framework
+2. **Bedrock Deployment**: Package and deploy agent to Bedrock AgentCore Runtime
+3. **Testing**: Validate agent responses with known cat/dog images
+4. **Integration**: Connect Next.js API routes to deployed agent
+5. **Monitoring**: Track classification accuracy and response times
 
-### Monitoring & Improvement
+### AWS Bedrock Integration
 
-- Track AI response quality metrics
-- Monitor user satisfaction with AI features
-- Regular review of AI costs and usage patterns
-- Continuous improvement of prompts and models
+**Nova Canvas Integration:**
 
-### Documentation
+```typescript
+// Example Nova Canvas API call
+const generateImage = async (petType: 'cat' | 'dog') => {
+  const prompt = petType === 'cat' ? catPrompt : dogPrompt;
 
-- Document AI model choices and rationale
-- Maintain prompt templates and examples
-- Document fallback behaviors and error handling
-- Keep track of model version changes and impacts
+  const request = {
+    taskType: 'TEXT_IMAGE',
+    textToImageParams: { text: prompt },
+    imageGenerationConfig: {
+      quality: 'standard',
+      width: 512,
+      height: 512,
+      numberOfImages: 1,
+    },
+  };
+
+  return await bedrockClient.invokeModel({
+    modelId: 'amazon.nova-canvas-v1:0',
+    body: JSON.stringify(request),
+  });
+};
+```
+
+**Bedrock Agent Integration:**
+
+```typescript
+// Example agent invocation
+const classifyImage = async (imageData: string, userName: string) => {
+  return await bedrockAgentClient.invokeAgent({
+    agentId: process.env.BEDROCK_AGENT_ID,
+    agentAliasId: process.env.BEDROCK_AGENT_ALIAS_ID,
+    inputText: JSON.stringify({ imageData, task: 'classify_pet' }),
+  });
+};
+```
+
+### Monitoring & Quality Assurance
+
+- **AWS CloudWatch**: Monitor API call success rates and latencies
+- **Classification Accuracy**: Track confidence scores and user feedback
+- **Cost Monitoring**: Monitor Bedrock usage and costs
+- **Error Tracking**: Log and analyze AI service failures
+
+### Documentation Requirements
+
+- Document Strands Agent configuration and deployment steps
+- Maintain AWS Bedrock model version compatibility
+- Document error codes and user-facing messages
+- Keep environment variable documentation updated
 
 ---
 
-_Note: These principles provide a foundation for AI development. Expand and refine based on specific AI features and requirements as they are implemented._
+_Note: This guide is specifically configured for the Pet Image AI application using Amazon Bedrock services and Strands Agents Framework._

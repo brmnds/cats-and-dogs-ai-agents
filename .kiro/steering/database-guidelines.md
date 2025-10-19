@@ -1,6 +1,6 @@
 # Database Guidelines
 
-_Draft framework - to be defined based on database choice and requirements_
+_Amazon Aurora PostgreSQL - Pet Image AI Application_
 
 ## Database Operations & Safety
 
@@ -60,36 +60,82 @@ _Draft framework - to be defined based on database choice and requirements_
 - Point-in-time recovery capabilities
 - Document recovery procedures
 
-## Database Choice Considerations
+## Database Choice: Amazon Aurora PostgreSQL
 
-### For 200-1K Users Scale
+### Selected for Pet Image AI Application
 
-**SQLite:**
+**Amazon Aurora PostgreSQL** has been selected for the following reasons:
 
-- Pros: Simple setup, no server required, excellent for development
-- Cons: Limited concurrent writes, not suitable for distributed systems
-- Best for: Single-server applications, development, small scale
+- **Managed Service**: Fully managed by AWS with automatic backups and scaling
+- **High Availability**: Multi-AZ deployment with automatic failover
+- **Performance**: Optimized for cloud with up to 3x performance of standard PostgreSQL
+- **Integration**: Native integration with AWS Amplify and other AWS services
+- **Cost-Effective**: Pay-per-use pricing suitable for 200-1K user scale
+- **Security**: Built-in encryption, VPC isolation, and IAM integration
 
-**PostgreSQL:**
+### Pet Image AI Schema
 
-- Pros: Feature-rich, excellent JSON support, strong consistency
-- Cons: More complex setup, higher resource usage
-- Best for: Complex queries, JSON data, future scalability
+**Classification Records Table:**
 
-**MySQL:**
+```sql
+CREATE TABLE classification_records (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_name VARCHAR(255) NOT NULL,
+    image_url TEXT NOT NULL,
+    classification VARCHAR(10) NOT NULL CHECK (classification IN ('cat', 'dog')),
+    confidence DECIMAL(5,4) NOT NULL CHECK (confidence >= 0 AND confidence <= 1),
+    processing_time INTEGER NOT NULL, -- milliseconds
+    timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 
-- Pros: Mature, well-documented, good performance
-- Cons: Less advanced features than PostgreSQL
-- Best for: Traditional relational data, proven reliability
+-- Indexes for common queries
+CREATE INDEX idx_classification_records_user_name ON classification_records(user_name);
+CREATE INDEX idx_classification_records_timestamp ON classification_records(timestamp DESC);
+CREATE INDEX idx_classification_records_classification ON classification_records(classification);
+```
 
-## ORM/Query Builder Guidelines
+## Database Integration Guidelines
+
+### AWS SDK and Native PostgreSQL Client
+
+**For Pet Image AI Application:**
+
+- Use AWS SDK for RDS connection management
+- Native PostgreSQL client (pg) for type-safe queries
+- Connection pooling through AWS RDS Proxy (optional)
+- Environment-based configuration for different stages
+
+**Connection Configuration:**
+
+```typescript
+interface DatabaseConfig {
+  host: string;
+  port: number;
+  database: string;
+  username: string;
+  password: string;
+  ssl: boolean;
+}
+
+// Example connection setup
+const dbConfig: DatabaseConfig = {
+  host: process.env.DATABASE_HOST!,
+  port: parseInt(process.env.DATABASE_PORT!),
+  database: process.env.DATABASE_NAME!,
+  username: process.env.DATABASE_USERNAME!,
+  password: process.env.DATABASE_PASSWORD!,
+  ssl: true,
+};
+```
 
 ### General Principles
 
-- Use TypeScript-first solutions when possible
-- Prefer type-safe query builders
-- Implement proper error handling
-- Use transactions for multi-step operations
+- Use TypeScript interfaces for all database models
+- Implement proper error handling with graceful degradation
+- Use parameterized queries to prevent SQL injection
+- Handle connection errors without breaking classification functionality
 
 ### Migration Management
 
@@ -121,6 +167,29 @@ _Draft framework - to be defined based on database choice and requirements_
 - Implement proper input validation
 - Audit sensitive data access
 
+### Pet Image AI Specific Guidelines
+
+**Data Storage Requirements:**
+
+- Store user name, classification result, confidence score, and timestamp
+- Handle database unavailability gracefully (classification still works)
+- Validate user input before database operations
+- Log database errors for monitoring
+
+**Error Handling Strategy:**
+
+- Classification API should work even if database is down
+- Display warning to user if data storage fails
+- Retry database operations with exponential backoff
+- Never block classification functionality due to database issues
+
+**Performance Considerations:**
+
+- Use connection pooling for concurrent requests
+- Index on user_name and timestamp for common queries
+- Monitor query performance and optimize as needed
+- Consider read replicas for analytics queries (future)
+
 ---
 
-_Note: This document will be expanded once the database technology is chosen and specific requirements are defined._
+_Note: This document is configured specifically for the Pet Image AI application using Amazon Aurora PostgreSQL._
